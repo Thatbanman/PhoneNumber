@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Phone Number</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .phone-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px;
+            margin-right: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #e0e0e0;
+        }
+
+        .tab.active {
+            background-color: #5c6bc0;
+            color: white;
+        }
+
+        .message-box {
+            border: 1px solid #ddd;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .message-input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .send-button {
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .send-button:hover {
+            background-color: #3949ab;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="phone-number" id="phone-number">Phone Number: </div>
+
+        <div class="tabs" id="tabs-container"></div>
+
+        <div id="message-box" class="message-box"></div>
+
+        <input type="text" id="message-input" class="message-input" placeholder="Type a message...">
+        <button class="send-button" id="send-button">Send Message</button>
+    </div>
+
+    <script>
+        // Generate random phone number
+        function generatePhoneNumber() {
+            const randomPhoneNumber = '+1 (555) ' + Math.floor(100 + Math.random() * 900) + '-' + Math.floor(1000 + Math.random() * 9000);
+            return randomPhoneNumber;
+        }
+
+        // Create a new tab for each user
+        function createTab(userName) {
+            const tabContainer = document.getElementById("tabs-container");
+            const tab = document.createElement("div");
+            tab.classList.add("tab");
+            tab.innerHTML = userName;
+            tab.onclick = function() {
+                selectTab(tab);
+            };
+            tabContainer.appendChild(tab);
+        }
+
+        // Set the selected tab as active
+        function selectTab(tab) {
+            const tabs = document.querySelectorAll(".tab");
+            tabs.forEach(tab => tab.classList.remove("active"));
+            tab.classList.add("active");
+
+            const userName = tab.innerHTML;
+            showMessagesForUser(userName);
+        }
+
+        // Display messages for the selected user
+        function showMessagesForUser(userName) {
+            const messageBox = document.getElementById("message-box");
+            messageBox.innerHTML = `<strong>Messages for ${userName}:</strong><br><br>`;
+            if (messages[userName]) {
+                messages[userName].forEach(msg => {
+                    messageBox.innerHTML += `${msg}<br>`;
+                });
+            }
+        }
+
+        // Store messages for different users
+        let messages = {};
+        const phoneNumber = generatePhoneNumber();
+        document.getElementById("phone-number").innerText = `Phone Number: ${phoneNumber}`;
+
+        // Add some initial users and a default active tab
+        const initialUsers = ['John', 'Jane', 'Mike'];
+        initialUsers.forEach(user => {
+            createTab(user);
+            messages[user] = [];  // Initialize empty message array for each user
+        });
+
+        // Select the first user by default
+        selectTab(document.querySelector(".tab"));
+
+        // Send message functionality
+        document.getElementById("send-button").onclick = function() {
+            const messageInput = document.getElementById("message-input");
+            const messageText = messageInput.value;
+            const activeTab = document.querySelector(".tab.active");
+            const activeUser = activeTab.innerText;
+
+            if (messageText.trim()) {
+                messages[activeUser].push(messageText);
+                showMessagesForUser(activeUser);
+                messageInput.value = "";  // Clear message input
+            }
+        };
+    </script>
+
+</body>
+</html>
