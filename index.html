@@ -84,12 +84,26 @@
         .send-button:hover {
             background-color: #3949ab;
         }
+
+        .phone-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="phone-number" id="phone-number">Phone Number: </div>
+
+        <!-- Custom phone number input -->
+        <input type="text" id="custom-phone" class="phone-input" placeholder="Enter custom phone number (e.g., +1 (555) 123-4567)">
+        <button class="send-button" id="set-phone-button">Set Phone Number</button>
 
         <div class="tabs" id="tabs-container"></div>
 
@@ -100,11 +114,22 @@
     </div>
 
     <script>
-        // Generate random phone number
-        function generatePhoneNumber() {
-            const randomPhoneNumber = '+1 (555) ' + Math.floor(100 + Math.random() * 900) + '-' + Math.floor(1000 + Math.random() * 9000);
-            return randomPhoneNumber;
+        // Initial phone number
+        let phoneNumber = "+1 (555) 123-4567";
+
+        // Update the displayed phone number
+        function updatePhoneNumberDisplay() {
+            document.getElementById("phone-number").innerText = `Phone Number: ${phoneNumber}`;
         }
+
+        // Allow user to set a custom phone number
+        document.getElementById("set-phone-button").onclick = function() {
+            const customPhone = document.getElementById("custom-phone").value;
+            if (customPhone.trim()) {
+                phoneNumber = customPhone; // Update the phone number with the custom input
+                updatePhoneNumberDisplay(); // Update the phone number display
+            }
+        };
 
         // Create a new tab for each user
         function createTab(userName) {
@@ -141,10 +166,6 @@
 
         // Store messages for different users
         let messages = {};
-        const phoneNumber = generatePhoneNumber();
-        document.getElementById("phone-number").innerText = `Phone Number: ${phoneNumber}`;
-
-        // Add some initial users and a default active tab
         const initialUsers = ['John', 'Jane', 'Mike'];
         initialUsers.forEach(user => {
             createTab(user);
@@ -167,6 +188,10 @@
                 messageInput.value = "";  // Clear message input
             }
         };
+
+        // Initialize the phone number display on page load
+        updatePhoneNumberDisplay();
+
     </script>
 
 </body>
